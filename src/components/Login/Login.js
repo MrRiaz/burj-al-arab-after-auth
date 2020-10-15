@@ -21,14 +21,23 @@ const Login = () => {
             const {displayName, email} = result.user;
             const signedInUser = {name: displayName, email};
             setLoggedInUser(signedInUser);
-            history.replace(from);
+            storeAuthToken();
           }).catch( error => {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            var email = error.email;
-            var credential = error.credential;
+            const errorMessage = error.message;
+            console.log(errorMessage);
           });
     }
+
+    const storeAuthToken = () => {
+        firebase.auth().currentUser.getIdToken(/* forceRefresh */ true)
+        .then(function(idToken) {
+            sessionStorage.setItem('token', idToken);
+            history.replace(from);
+          }).catch(function(error) {
+            // Handle error
+          });
+    }
+
     return (
         <div>
             <h1>This is Login</h1>
